@@ -67,19 +67,19 @@
     - nginx-configuration
     - nginx-configuration-ssl
 
-#- name: update configuration file
-#  template:
-#    src: etc/nginx/nginx.cfg.j2
-#    dest: /etc/nginx/nginx.cfg
-#    owner: root
-#    group: root
-#    mode: 0640
-#    validate: 'nginx -t %s'
-#  notify: restart nginx
-#  tags:
-#    - configuration
-#    - nginx
-#    - nginx-configuration
+- name: update configuration file
+  template:
+    src: "{{ nginx_configuration_file.lstrip('/') }}.j2"
+    dest: "{{ nginx_configuration_file }}"
+    owner: root
+    group: root
+    mode: 0644
+    validate: 'nginx -t -c %s'
+  notify: restart nginx
+  tags:
+    - configuration
+    - nginx
+    - nginx-configuration
 
 - name: start and enable service
   service:

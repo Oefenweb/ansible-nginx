@@ -4,5 +4,15 @@ nginx_version: stable
 
 nginx_install: []
 
+nginx_user: www-data
+nginx_group: "{{ nginx_user }}"
+nginx_worker_processes: auto
+nginx_pid: /run/nginx.pid
+
+nginx_events:
+  - 'worker_connections 768'
+  - '# multi_accept on'
+
+
 # ssl (file) map
 nginx_ssl_map: []

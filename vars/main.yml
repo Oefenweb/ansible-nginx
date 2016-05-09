@@ -7,3 +7,5 @@ nginx_versions_supported:
 nginx_ppa: "ppa:nginx/{{ nginx_version }}"
 nginx_dependencies:
   - nginx
+
+nginx_configuration_file: /etc/nginx/nginx.conf
