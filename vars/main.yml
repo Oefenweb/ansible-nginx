@@ -1,0 +1,9 @@
+# vars file for nginx
+---
+nginx_versions_supported:
+  - stable
+  - development
+
+nginx_ppa: "ppa:nginx/{{ nginx_version }}"
+nginx_dependencies:
+  - nginx

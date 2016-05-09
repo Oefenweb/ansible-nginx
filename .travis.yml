@@ -1,0 +1,85 @@
+---
+sudo: required
+dist: trusty
+
+language: python
+python: "2.7"
+
+env:
+  - ANSIBLE_VERSION=latest
+  - ANSIBLE_VERSION=2.0.2.0
+  - ANSIBLE_VERSION=2.0.1.0
+  - ANSIBLE_VERSION=2.0.0.2
+  - ANSIBLE_VERSION=2.0.0.1
+  - ANSIBLE_VERSION=2.0.0.0
+  - ANSIBLE_VERSION=1.9.6
+  - ANSIBLE_VERSION=1.9.5
+  - ANSIBLE_VERSION=1.9.4
+  - ANSIBLE_VERSION=1.9.3
+  - ANSIBLE_VERSION=1.9.2
+  - ANSIBLE_VERSION=1.9.1
+  - ANSIBLE_VERSION=1.9.0.1
+  - ANSIBLE_VERSION=1.8.4
+  - ANSIBLE_VERSION=1.8.3
+  - ANSIBLE_VERSION=1.8.2
+  - ANSIBLE_VERSION=1.8.1
+  - ANSIBLE_VERSION=1.8
+  - ANSIBLE_VERSION=1.7.2
+  - ANSIBLE_VERSION=1.7.1
+  - ANSIBLE_VERSION=1.7
+  - ANSIBLE_VERSION=1.6.9
+  - ANSIBLE_VERSION=1.6.8
+  - ANSIBLE_VERSION=1.6.7
+  - ANSIBLE_VERSION=1.6.6
+  - ANSIBLE_VERSION=1.6.5
+  - ANSIBLE_VERSION=1.6.4
+  - ANSIBLE_VERSION=1.6.3
+  - ANSIBLE_VERSION=1.6.2
+  - ANSIBLE_VERSION=1.6.10
+  - ANSIBLE_VERSION=1.6.1
+  - ANSIBLE_VERSION=1.6
+
+branches:
+  only:
+    - master
+
+before_install:
+  - sudo apt-get update -qq
+
+  # Remove nginx
+  - sudo apt-get remove --purge --yes nginx
+
+  # Install dependencies
+  - sudo apt-get install --yes wget
+
+install:
+  # Install Ansible.
+  - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install --no-binary ansible ansible; else pip install --no-binary ansible ansible==$ANSIBLE_VERSION; fi
+
+script:
+  # Check the role/playbook's syntax.
+  - ansible-playbook -i tests/inventory tests/test.yml --syntax-check
+
+  # Run the role/playbook with ansible-playbook.
+  - ansible-playbook -i tests/inventory tests/test.yml -vvvv
+
+  # Run the role/playbook again, checking to make sure it's idempotent.
+  - >
+    ansible-playbook -i tests/inventory tests/test.yml
+    | grep -q 'changed=0.*failed=0'
+    && (echo 'Idempotence test: pass' && exit 0)
+    || (echo 'Idempotence test: fail' && exit 1)
+
+  # Test nginx installation
+  - >
+    wget http://localhost -O /dev/null -S --quiet 2>&1
+    | grep -q '200 OK'
+    && (echo 'Availability test: pass' && exit 0)
+    || (echo 'Availability test: fail' && exit 1)
+
+notifications:
+  email: false
+  hipchat:
+    rooms:
+      secure: pml1bop6SDZ15/XQEPp1/m+GBHHtHb0gW+2F7I0F92UuaueTtZbl52kUNSwOupsKK23oCO7sNgy7gjIGMDaduJvUnZTr8TZYuJ6Fj1ARmgIMSyWSGvZq5TJ66S+LzH5oth7lU+QFulYRCG7Y3EL8x9BlfUnLm+Sm/jPgWAlFYLhtCh0O/BadfWQSh284k0uJE+m+Rs82WSu3pU1h0gLIUmi+kTLB3TPAzTd4z2ClQTHdV8FdQH/Al5j2eFuYQgtxA+d+Hvv1AJksnsra9Bw3s+l39Pc88aAlEvCChRLIByE61bz3gVJK5E1SSMGdvZl17mGm6ZpaAjAepFtl4biBekERJ//SHxF6xasVeTymXKVBoimS3nmzHJV8fzMyO5pLS7UHmuLC0MhtGeY/e4esNQaCJ3w3ryyR+lXAbkO/nnFmBaLHQ0+L5tocT47/IF3IHnDexcmjWheEy9nC79U3vNQ+9ew7CcyvneSaRYSQ2Bb+c1euUAV+1zwCgz1AaZwX8diTVF0edPBqv9qtr2L7SikuwG91kC56vvgIfLPbrVM4tsjo4eRPIJGdTw5VErVHS2Kob6Pzzz01omY2p4SoUSyuJPpmf6hlh6V0bWOEKvA3R2kIT34oWH4YRwMnlz4gN9p7P6UyvCY1M8pWT+M514yM2Hfzu+TTnV2R4Gi9Um4=
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
