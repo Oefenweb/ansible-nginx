@@ -2,9 +2,16 @@
 ---
 nginx_versions_supported:
   - stable
-  - development
+  - mainline
 
-nginx_ppa: "ppa:nginx/{{ nginx_version }}"
+nginx_repositories:
+  - type: deb
+    url: "http://nginx.org/packages/{{ '' if nginx_version == 'stable' else 'mainline/' }}{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }}"
+    component: nginx
+  - type: deb-src
+    url: "http://nginx.org/packages/{{ '' if nginx_version == 'stable' else 'mainline/' }}{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }}"
+    component: nginx
+
 nginx_dependencies:
   - nginx
 

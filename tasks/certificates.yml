@@ -1,0 +1,24 @@
+# tasks file for nginx
+---
+- name: create certificate files directories
+  file:
+    path: "{{ item.dest | dirname }}"
+    state: directory
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: 0750
+  with_items: "{{ nginx_ssl_map }}"
+  tags:
+    - nginx-certificates-directories
+
+- name: copy certificate files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0640') }}"
+  with_items: "{{ nginx_ssl_map }}"
+  notify: restart nginx
+  tags:
+    - nginx-certificates-copy

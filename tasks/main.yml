@@ -2,84 +2,36 @@
 ---
 - name: check version support
   fail:
-    msg: "HAProxy version {{ nginx_version }} is not supported"
+    msg: "NGINX version {{ nginx_version }} is not supported"
   when: nginx_version not in nginx_versions_supported
   tags:
     - configuration
     - nginx
     - nginx-check-version-support
 
-- name: add repository from PPA and install its signing key
-  apt_repository:
-    repo: "{{ nginx_ppa }}"
-    update_cache: true
+- include: repository.yml
   tags:
     - configuration
     - nginx
-    - nginx-add-repository
+    - nginx-repository
 
-- name: install dependencies
-  apt:
-    name: "{{ item }}"
-    state: latest
-  with_items: "{{ nginx_dependencies }}"
-  tags:
-    - configuration
-    - nginx
-    - nginx-dependencies
-
-- name: install
-  apt:
-    name: "{{ item }}"
-    state: latest
-  with_items: "{{ nginx_install }}"
+- include: install.yml
   tags:
     - configuration
     - nginx
     - nginx-install
 
-- name: create certificate files directories
-  file:
-    path: "{{ item.dest | dirname }}"
-    state: directory
-    owner: "{{ item.owner | default('root') }}"
-    group: "{{ item.group | default('root') }}"
-    mode: 0750
-  with_items: "{{ nginx_ssl_map }}"
+- include: certificates.yml
   tags:
     - configuration
     - nginx
-    - nginx-configuration
-    - nginx-configuration-ssl
+    - nginx-certificates
 
-- name: copy certificate files
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: "{{ item.owner | default('root') }}"
-    group: "{{ item.group | default('root') }}"
-    mode: "{{ item.mode | default('0640') }}"
-  with_items: "{{ nginx_ssl_map }}"
-  notify: restart nginx
+- include: configure.yml
   tags:
     - configuration
     - nginx
-    - nginx-configuration
-    - nginx-configuration-ssl
-
-- name: update configuration file
-  template:
-    src: "{{ nginx_configuration_file.lstrip('/') }}.j2"
-    dest: "{{ nginx_configuration_file }}"
-    owner: root
-    group: root
-    mode: 0644
-    validate: 'nginx -t -c %s'
-  notify: restart nginx
-  tags:
-    - configuration
-    - nginx
-    - nginx-configuration
+    - nginx-configure
 
 - name: start and enable service
   service:

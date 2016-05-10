@@ -1,0 +1,13 @@
+# tasks file for percona-client
+---
+#- name: update configuration file
+#  template:
+#    src: "{{ nginx_configuration_file.lstrip('/') }}.j2"
+#    dest: "{{ nginx_configuration_file }}"
+#    owner: root
+#    group: root
+#    mode: 0644
+#    validate: 'nginx -t -c %s'
+#  notify: restart nginx
+#  tags:
+#    - nginx-configure-core

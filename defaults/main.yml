@@ -13,6 +13,5 @@ nginx_events:
   - 'worker_connections 768'
   - '# multi_accept on'
 
-
 # ssl (file) map
 nginx_ssl_map: []
