@@ -13,6 +13,6 @@
     repo: "{{ item.type }} {{ item.url }} {{ item.component }}"
     state: present
     update_cache: true
-  with_items: nginx_repositories
+  with_items: "{{ nginx_repositories }}"
   tags:
     - nginx-repository-add
