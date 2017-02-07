@@ -1,6 +1,6 @@
 # tasks file for nginx
 ---
-- name: create certificate files directories
+- name: certificates | create files directories
   file:
     path: "{{ item.dest | dirname }}"
     state: directory
@@ -11,7 +11,7 @@
   tags:
     - nginx-certificates-directories
 
-- name: copy certificate files
+- name: certificates | copy files
   copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"

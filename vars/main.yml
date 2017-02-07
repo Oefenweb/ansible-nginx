@@ -12,7 +12,19 @@ nginx_repositories:
     url: "http://nginx.org/packages/{{ '' if nginx_version == 'stable' else 'mainline/' }}{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }}"
     component: nginx
 
-nginx_dependencies:
-  - nginx
+nginx_conf_path: /etc/nginx
+nginx_conf_file: "{{ nginx_conf_path }}/nginx.conf"
 
-nginx_configuration_file: /etc/nginx/nginx.conf
+nginx_conf_d:
+  path: "{{ nginx_conf_path }}/conf.d"
+nginx_sites_available:
+  path: "{{ nginx_conf_path }}/sites-available"
+nginx_sites_enabled:
+  path: "{{ nginx_conf_path }}/sites-enabled"
+nginx_streams_available:
+  path: "{{ nginx_conf_path }}/streams-available"
+nginx_streams_enabled:
+  path: "{{ nginx_conf_path }}/streams-enabled"
+
+nginx_var_log:
+  path: /var/log/nginx

@@ -1,13 +1,55 @@
-# tasks file for percona-client
+# tasks file for nginx
 ---
-#- name: update configuration file
-#  template:
-#    src: "{{ nginx_configuration_file.lstrip('/') }}.j2"
-#    dest: "{{ nginx_configuration_file }}"
-#    owner: root
-#    group: root
-#    mode: 0644
-#    validate: 'nginx -t -c %s'
-#  notify: restart nginx
-#  tags:
-#    - nginx-configure-core
+- name: configure | create directories
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0755') }}"
+  with_items:
+    - "{{ nginx_conf_d }}"
+    - "{{ nginx_sites_available }}"
+    - "{{ nginx_sites_enabled }}"
+    - "{{ nginx_streams_available }}"
+    - "{{ nginx_streams_enabled }}"
+    - "{{ nginx_var_log }}"
+  tags:
+    - nginx-configure-directories
+    - nginx-configure-directories-create
+
+- name: configure | update core file
+  template:
+    src: "{{ nginx_conf_file.lstrip('/') }}.j2"
+    dest: "{{ nginx_conf_file }}"
+    owner: root
+    group: root
+    mode: 0644
+    validate: 'nginx -t -c %s'
+  notify: restart nginx
+  tags:
+    - nginx-configure-core
+
+- name: configure | update sites-available files
+  template:
+    src: "{{ nginx_streams_available.path.lstrip('/') }}.j2"
+    dest: "{{ nginx_streams_available.path }}"
+    owner: root
+    group: root
+    mode: 0644
+    validate: 'nginx -t -c %s'
+  notify: restart nginx
+  tags:
+    - nginx-configure-core
+
+- name: configure | update streams-available files
+  template:
+    src: "{{ nginx_conf_file.lstrip('/') }}.j2"
+    dest: "{{ nginx_conf_file }}"
+    owner: root
+    group: root
+    mode: 0644
+    validate: 'nginx -t -c %s'
+  notify: restart nginx
+  tags:
+    - nginx-configure-core

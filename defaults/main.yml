@@ -2,16 +2,82 @@
 ---
 nginx_version: stable
 
+nginx_dependencies:
+  - nginx
 nginx_install: []
 
-nginx_user: www-data
-nginx_group: "{{ nginx_user }}"
-nginx_worker_processes: auto
-nginx_pid: /run/nginx.pid
+# presets
+nginx_preset_user: www-data
+nginx_preset_group: "{{ nginx_preset_user }}"
+nginx_preset_processes: auto
+nginx_preset_pid: /run/nginx.pid
 
-nginx_events:
-  - 'worker_connections 768'
-  - '# multi_accept on'
+nginx_preset_worker_connections: 1024
+
+# directives
+nginx_core_directives:
+  - "user {{ nginx_preset_user }} {{ nginx_preset_group }}"
+  - "worker_processes {{ nginx_preset_processes }}"
+  - "pid {{ nginx_preset_pid }}"
+
+nginx_events_directives:
+  - "worker_connections {{ nginx_preset_worker_connections }}"
+
+nginx_http_directives:
+  - |
+    ##
+    # Basic Settings
+    ##
+  - sendfile on
+  - tcp_nopush on
+  - tcp_nodelay on
+  - keepalive_timeout 65
+  - types_hash_max_size 2048
+  - '# server_tokens off'
+
+  - '# server_names_hash_bucket_size 64'
+  - '# server_name_in_redirect off'
+
+  - "include {{ nginx_conf_path }}/mime.types"
+  - default_type application/octet-stream
+
+  - |
+    ##
+    # SSL Settings
+    ##
+  - '# Dropping SSLv3, ref: POODLE'
+  - ssl_protocols TLSv1 TLSv1.1 TLSv1.2
+  - ssl_prefer_server_ciphers on
+
+  - |
+    ##
+    # Logging Settings
+    ##
+  - "access_log {{ nginx_var_log.path }}/access.log"
+  - "error_log {{ nginx_var_log.path }}/error.log"
+
+  - |
+    ##
+    # Gzip Settings
+    ##
+  - gzip on
+  - gzip_disable "msie6"
+
+  - '# gzip_vary on'
+  - '# gzip_proxied any'
+  - '# gzip_comp_level 6'
+  - '# gzip_buffers 16 8k'
+  - '# gzip_http_version 1.1'
+  - '# gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript'
+  - |
+    ##
+    # Virtual Host Configs
+    ##
+  - "include {{ nginx_conf_d.path }}/*.conf"
+  - "include {{ nginx_sites_enabled.path }}/*.conf"
+
+nginx_stream_directives:
+  - "include {{ nginx_streams_enabled.path }}/*.conf"
 
 # ssl (file) map
 nginx_ssl_map: []
