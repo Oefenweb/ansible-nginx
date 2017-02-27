@@ -14,6 +14,9 @@ nginx_repositories:
 
 nginx_conf_path: /etc/nginx
 nginx_conf_file: "{{ nginx_conf_path }}/nginx.conf"
+nginx_conf_d_file: "{{ nginx_conf_path }}/conf.d.conf"
+nginx_sites_available_file: "{{ nginx_conf_path }}/sites-available.conf"
+nginx_streams_available_file: "{{ nginx_conf_path }}/streams-available.conf"
 
 nginx_conf_d:
   path: "{{ nginx_conf_path }}/conf.d"

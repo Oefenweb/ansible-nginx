@@ -79,5 +79,10 @@ nginx_http_directives:
 nginx_stream_directives:
   - "include {{ nginx_streams_enabled.path }}/*.conf"
 
+nginx_conf_d_include_files: []
+nginx_sites_enabled_include_files: []
+nginx_streams_enabled_include_files: []
+nginx_mail_enabled_include_files: []
+
 # ssl (file) map
 nginx_ssl_map: []

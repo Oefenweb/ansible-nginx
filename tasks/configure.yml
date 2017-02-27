@@ -20,7 +20,7 @@
 
 - name: configure | update core file
   template:
-    src: "{{ nginx_conf_file.lstrip('/') }}.j2"
+    src: "{{ nginx_conf_file }}.j2"
     dest: "{{ nginx_conf_file }}"
     owner: root
     group: root
@@ -32,8 +32,8 @@
 
 - name: configure | update sites-available files
   template:
-    src: "{{ nginx_streams_available.path.lstrip('/') }}.j2"
-    dest: "{{ nginx_streams_available.path }}"
+    src: "{{ nginx_conf_path }}/sites-available.conf.j2"
+    dest: "{{ nginx_sites_available.path }}/{{ item }}"
     owner: root
     group: root
     mode: 0644
@@ -44,8 +44,8 @@
 
 - name: configure | update streams-available files
   template:
-    src: "{{ nginx_conf_file.lstrip('/') }}.j2"
-    dest: "{{ nginx_conf_file }}"
+    src: "{{ nginx_conf_path }}/streams-available.conf.j2"
+    dest: "{{ nginx_streams_available.path }}/{{ item }}"
     owner: root
     group: root
     mode: 0644
