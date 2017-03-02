@@ -21,6 +21,16 @@
     - nginx-configure-directories
     - nginx-configure-directories-create
 
+- name: configure | remove paths
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items: "{{ nginx_absent_paths }}"
+  notify: reload nginx
+  tags:
+    - nginx-configure-paths
+    - nginx-configure-paths-remove
+
 - name: configure | update conf.d files
   template:
     src: "{{ nginx_conf_d.template.file.lstrip('/') }}.j2"

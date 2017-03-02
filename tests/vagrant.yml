@@ -142,3 +142,10 @@
               listen   587;
               protocol smtp;
             }
+
+    nginx_absent_paths:
+      - "{{ nginx_conf_path }}/fastcgi_params"
+      - "{{ nginx_conf_path }}/scgi_params"
+      - "{{ nginx_conf_path }}/uwsgi_params"
+
+      - "{{ nginx_conf_d.path }}/default.conf"
