@@ -2,6 +2,143 @@
 ---
 - hosts: all
   remote_user: vagrant
-  sudo: true
+  become: true
   roles:
     - ../../
+  post_tasks:
+    - include: post.yml
+  vars:
+    nginx_http_directives:
+      - |
+        ##
+        # Basic Settings
+        ##
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+        keepalive_timeout 65;
+        types_hash_max_size 2048;
+        # server_tokens off;
+
+        # server_names_hash_bucket_size 64;
+        # server_name_in_redirect off;
+
+        include {{ nginx_conf_path }}/mime.types;
+        default_type application/octet-stream;
+
+        ##
+        # Logging Settings
+        ##
+        access_log {{ nginx_var_log.path }}/access.log;
+        error_log {{ nginx_var_log.path }}/error.log;
+
+        ##
+        # Virtual Host Configs
+        ##
+        include {{ nginx_conf_d.path }}/*.conf;
+        include {{ nginx_sites_enabled.path }}/*.conf;
+
+    # optional
+    nginx_stream_directives:
+      - "include {{ nginx_streams_enabled.path }}/*.conf"
+
+    # optional
+    nginx_mail_directives:
+      - |
+        server_name       mail.example.com;
+        auth_http         localhost:9000/cgi-bin/nginxauth.cgi;
+
+        imap_capabilities IMAP4rev1 UIDPLUS IDLE LITERAL+ QUOTA;
+
+        pop3_auth         plain apop cram-md5;
+        pop3_capabilities LAST TOP USER PIPELINING UIDL;
+
+        smtp_auth         login plain cram-md5;
+        smtp_capabilities "SIZE 10485760" ENHANCEDSTATUSCODES 8BITMIME DSN;
+        xclient           off;
+
+        include {{ nginx_mails_enabled.path }}/*.conf;
+
+    nginx_conf_d_include_files:
+      - "{{ nginx_preset_conf_d_ssl }}"
+      - "{{ nginx_preset_conf_d_gzip }}"
+
+    nginx_snippets_include_files:
+      - "{{ nginx_preset_conf_d_fastcgi_param }}"
+      - "{{ nginx_preset_conf_d_scgi_param }}"
+      - "{{ nginx_preset_conf_d_uwsgi_param }}"
+
+    nginx_sites_available_include_files:
+      - name: default-80.conf
+        directives:
+          - |
+            server {
+              listen 80;
+              server_name _ default-80 "";
+              location / {
+                root   /usr/share/nginx/html;
+                index  index.html index.htm;
+              }
+            }
+
+      - name: default-81.conf
+        directives:
+          - |
+            server {
+              listen 81;
+              server_name _ default-81 "";
+              root /usr/share/nginx/html;
+              location / { try_files $uri $uri/ /index.html; }
+              location /images/ { try_files $uri $uri/ /index.html; }
+            }
+      - name: default-82.conf
+        directives:
+          - server { listen 82; server_name _ default-82 ""; root /usr/share/nginx/html; location / { root /usr/share/nginx/html; index index.html index.htm; } }
+      - name: default-83.conf
+        directives:
+          - 'server {'
+          - 'listen 83'
+          - 'server_name _ default-83 ""'
+          - 'root /usr/share/nginx/html'
+          - 'location / {'
+          - 'root /usr/share/nginx/htmlindex index.html index.htm'
+          - '}'
+          - '}'
+
+    nginx_streams_available_include_files:
+      - name: dns.conf
+        directives:
+          - |
+            upstream dns {
+               server 8.8.8.8:53;
+               server 8.8.4.4:53;
+            }
+
+            server {
+              listen {{ ansible_lo['ipv4']['address'] }}:53 udp;
+              proxy_responses 1;
+              proxy_timeout 20s;
+              proxy_pass dns;
+            }
+
+    nginx_mails_available_include_files:
+      - name: mail.conf
+        directives:
+          - |
+            server {
+              listen   25;
+              protocol smtp;
+            }
+            server {
+              listen   110;
+              protocol pop3;
+              proxy_pass_error_message on;
+            }
+            server {
+              listen   143;
+              protocol imap;
+            }
+            server {
+              listen   587;
+              protocol smtp;
+            }

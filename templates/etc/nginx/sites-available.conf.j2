@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+
+{% for directive in item.directives %}
+{% include '_directive.j2' %}
+{% endfor %}

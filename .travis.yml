@@ -29,10 +29,7 @@ before_install:
   - sudo apt-get update -qq
 
   # Remove nginx
-  - sudo apt-get remove --purge --yes nginx
-
-  # Install dependencies
-  - sudo apt-get install --yes wget
+  - sudo apt-get remove --purge --yes nginx*
 
 install:
   # Install Ansible.
@@ -52,13 +49,6 @@ script:
     | grep -q 'changed=0.*failed=0'
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
-
-  # Test nginx installation
-  - >
-    wget http://localhost -O /dev/null -S --quiet 2>&1
-    | grep -q '200 OK'
-    && (echo 'Availability test: pass' && exit 0)
-    || (echo 'Availability test: fail' && exit 1)
 
   - if [ "$ANSIBLE_VERSION" = "latest" ]; then ansible-lint tests/test.yml || true; fi
 

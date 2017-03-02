@@ -1,0 +1,16 @@
+# post test file for nginx
+---
+- name: post | install dependencies
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: true
+    cache_valid_time: "{{ apt_update_cache_valid_time | default(3600) }}"
+  with_items:
+    - curl
+
+- name: post | test installation
+  command: curl -s --head http://localhost
+  register: _result
+  changed_when: false
+  failed_when: _result.stdout.find('200 OK') == -1

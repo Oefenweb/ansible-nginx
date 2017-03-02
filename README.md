@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Oefenweb/ansible-nginx.svg?branch=master)](https://travis-ci.org/Oefenweb/ansible-nginx) [![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-nginx-blue.svg)](https://galaxy.ansible.com/Oefenweb/nginx)
 
-Set up (the latest version of) [NGINX](http://nginx.org/) in Ubuntu systems.
+Set up (the latest version of) [NGINX](http://nginx.org/) in Debian-like systems.
 
 #### Requirements
 
@@ -12,7 +12,20 @@ Set up (the latest version of) [NGINX](http://nginx.org/) in Ubuntu systems.
 
 * `nginx_version`: [default: `stable`]: Version to install (e.g. `development`)
 
+* `nginx_dependencies`: [default: `['nginx']`]: Packages to install
 * `nginx_install`: [default: `[]`]: Additional packages to install
+
+* `nginx_core_directives`: [default: `["user {{ nginx_preset_user }} {{ nginx_preset_group }}", "worker_processes {{ nginx_preset_processes }}", "pid {{ nginx_preset_pid }}"]`]: 
+* `nginx_events_directives`: [default: `["worker_connections {{ nginx_preset_worker_connections }}"]`]: 
+* `nginx_http_directives`: [default: `[]`]: 
+* `nginx_stream_directives`: [optional]: 
+* `nginx_mail_directives`: [optional]: 
+
+* `nginx_conf_d_include_files`: [default: `[]`]: 
+* `nginx_snippets_include_files`: [default: `[]`]: 
+* `nginx_sites_available_include_files`: [default: `[]`]: 
+* `nginx_streams_available_include_files`: [default: `[]`]: 
+* `nginx_mails_available_include_files`: [default: `[]`]: 
 
 * `nginx_ssl_map`: [default: `[]`]: SSL declarations
 * `nginx_ssl_map.{n}.src`: The local path of the file to copy, can be absolute or relative (e.g. `../../../files/nginx/etc/nginx/ssl/star-example-com.pem`)
@@ -29,13 +42,21 @@ None
 
 ##### 1
 
-```
-```
+```yaml
+---
+- hosts: all
+  roles:
+    - nginx
+``
 
 ##### 2
 
-```
-```
+```yaml
+---
+- hosts: all
+  roles:
+    - nginx
+``
 
 #### License
 

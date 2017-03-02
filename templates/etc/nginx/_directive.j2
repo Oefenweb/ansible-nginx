@@ -1,5 +1,5 @@
 {% if directive.find('\n') != -1 %}
-  {{ directive.replace('\n', '\n  ').rstrip() }}
+{{ directive }}
 {% else %}
-{% if directive != '' %}  {{ directive.replace(';', ';\n  ').replace(' {', ' {\n  ').replace(' }', ' \n}\n') }}{% if directive.find('{') == -1 %};
+{% if directive != '' %}{{ directive.replace(';', ';\n  ').replace(' {', ' {\n  ').replace(' }', ' \n}\n') }}{% if directive.find('{') == -1 %};
 {% endif %}{% endif %}{% endif %}

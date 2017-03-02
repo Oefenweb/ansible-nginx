@@ -9,18 +9,86 @@
     mode: "{{ item.mode | default('0755') }}"
   with_items:
     - "{{ nginx_conf_d }}"
+    - "{{ nginx_snippets }}"
     - "{{ nginx_sites_available }}"
     - "{{ nginx_sites_enabled }}"
     - "{{ nginx_streams_available }}"
     - "{{ nginx_streams_enabled }}"
+    - "{{ nginx_mails_available }}"
+    - "{{ nginx_mails_enabled }}"
     - "{{ nginx_var_log }}"
   tags:
     - nginx-configure-directories
     - nginx-configure-directories-create
 
+- name: configure | update conf.d files
+  template:
+    src: "{{ nginx_conf_d.template.file.lstrip('/') }}.j2"
+    dest: "{{ nginx_conf_d.path }}/{{ item.name }}"
+    owner: root
+    group: root
+    mode: 0644
+#    validate: 'nginx -t -c %s'
+  notify: reload nginx
+  with_items: "{{ nginx_conf_d_include_files }}"
+  tags:
+    - nginx-configure-conf_d
+
+- name: configure | update snippets files
+  template:
+    src: "{{ nginx_snippets.template.file.lstrip('/') }}.j2"
+    dest: "{{ nginx_snippets.path }}/{{ item.name }}"
+    owner: root
+    group: root
+    mode: 0644
+#    validate: 'nginx -t -c %s'
+  notify: reload nginx
+  with_items: "{{ nginx_snippets_include_files }}"
+  tags:
+    - nginx-configure-snippets
+
+- name: configure | update sites-available files
+  template:
+    src: "{{ nginx_sites_available.template.file.lstrip('/') }}.j2"
+    dest: "{{ nginx_sites_available.path }}/{{ item.name }}"
+    owner: root
+    group: root
+    mode: 0644
+#    validate: 'nginx -t -c %s'
+  notify: reload nginx
+  with_items: "{{ nginx_sites_available_include_files }}"
+  tags:
+    - nginx-configure-sites-available
+
+- name: configure | update streams-available files
+  template:
+    src: "{{ nginx_streams_available.template.file.lstrip('/') }}.j2"
+    dest: "{{ nginx_streams_available.path }}/{{ item.name }}"
+    owner: root
+    group: root
+    mode: 0644
+#    validate: 'nginx -t -c %s'
+  notify: reload nginx
+  with_items: "{{ nginx_streams_available_include_files }}"
+  tags:
+    - nginx-configure-streams-available
+
+- name: configure | update mails-available files
+  template:
+    src: "{{ nginx_mails_available.template.file.lstrip('/') }}.j2"
+    dest: "{{ nginx_mails_available.path }}/{{ item.name }}"
+    owner: root
+    group: root
+    mode: 0644
+#    validate: 'nginx -t -c %s'
+  notify: reload nginx
+  with_items: "{{ nginx_mails_available_include_files }}"
+  tags:
+    - nginx-configure-mails-available
+
 - name: configure | update core file
   template:
-    src: "{{ nginx_conf_file }}.j2"
+    src: "{{ nginx_conf_file.lstrip('/') }}.j2"
     dest: "{{ nginx_conf_file }}"
     owner: root
     group: root
@@ -30,26 +98,65 @@
   tags:
     - nginx-configure-core
 
-- name: configure | update sites-available files
-  template:
-    src: "{{ nginx_conf_path }}/sites-available.conf.j2"
-    dest: "{{ nginx_sites_available.path }}/{{ item }}"
-    owner: root
-    group: root
-    mode: 0644
-    validate: 'nginx -t -c %s'
-  notify: restart nginx
+- name: configure | remove streams-enabled symlinks
+  file:
+    path: "{{ nginx_streams_enabled.path }}/{{ item.name }}"
+    state: absent
+  with_items: "{{ nginx_streams_available_include_files }}"
+  when: item.state | default('enabled') != 'enabled'
+  notify: reload nginx
   tags:
-    - nginx-configure-core
+    - nginx-configure-streams-available-enabled
 
-- name: configure | update streams-available files
-  template:
-    src: "{{ nginx_conf_path }}/streams-available.conf.j2"
-    dest: "{{ nginx_streams_available.path }}/{{ item }}"
-    owner: root
-    group: root
-    mode: 0644
-    validate: 'nginx -t -c %s'
-  notify: restart nginx
+- name: configure | remove sites-enabled symlinks
+  file:
+    path: "{{ nginx_sites_enabled.path }}/{{ item.name }}"
+    state: absent
+  with_items: "{{ nginx_sites_available_include_files }}"
+  when: item.state | default('enabled') != 'enabled'
+  notify: reload nginx
   tags:
-    - nginx-configure-core
+    - nginx-configure-sites-available-enabled
+
+- name: configure | add sites-enable symlinks
+  command: ln -s ../{{ nginx_sites_available.path | basename }}/{{ item.name }} ./{{ item.name }}
+  args:
+    chdir: "{{ nginx_sites_enabled.path }}"
+    creates: "{{ nginx_sites_enabled.path }}/{{ item.name }}"
+  with_items: "{{ nginx_sites_available_include_files }}"
+  when: item.state | default('enabled') == 'enabled'
+  notify: reload nginx
+  tags:
+    - nginx-configure-sites-available-disabled
+
+- name: configure | add streams-enable symlinks
+  command: ln -s ../{{ nginx_streams_available.path | basename }}/{{ item.name }} ./{{ item.name }}
+  args:
+    chdir: "{{ nginx_streams_enabled.path }}"
+    creates: "{{ nginx_streams_enabled.path }}/{{ item.name }}"
+  with_items: "{{ nginx_streams_available_include_files }}"
+  when: item.state | default('enabled') == 'enabled'
+  notify: reload nginx
+  tags:
+    - nginx-configure-streams-available-disabled
+
+- name: configure | remove mails-enabled symlinks
+  file:
+    path: "{{ nginx_mails_enabled.path }}/{{ item.name }}"
+    state: absent
+  with_items: "{{ nginx_mails_available_include_files }}"
+  when: item.state | default('enabled') != 'enabled'
+  notify: reload nginx
+  tags:
+    - nginx-configure-mails-available-enabled
+
+- name: configure | add mails-enable symlinks
+  command: ln -s ../{{ nginx_mails_available.path | basename }}/{{ item.name }} ./{{ item.name }}
+  args:
+    chdir: "{{ nginx_mails_enabled.path }}"
+    creates: "{{ nginx_mails_enabled.path }}/{{ item.name }}"
+  with_items: "{{ nginx_mails_available_include_files }}"
+  when: item.state | default('enabled') == 'enabled'
+  notify: reload nginx
+  tags:
+    - nginx-configure-mails-available-disabled
