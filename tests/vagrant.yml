@@ -96,14 +96,16 @@
           - server { listen 82; server_name _ default-82 ""; root /usr/share/nginx/html; location / { root /usr/share/nginx/html; index index.html index.htm; } }
       - name: default-83.conf
         directives:
-          - 'server {'
-          - 'listen 83'
-          - 'server_name _ default-83 ""'
-          - 'root /usr/share/nginx/html'
-          - 'location / {'
-          - 'root /usr/share/nginx/htmlindex index.html index.htm'
-          - '}'
-          - '}'
+          - |
+            server {
+              listen 83;
+              server_name _ default-83 "";
+              root /usr/share/nginx/html;
+              location / {
+                root /usr/share/nginx/html;
+                index index.html index.htm;
+              }
+            }
 
     nginx_streams_available_include_files:
       - name: dns.conf
@@ -126,20 +128,20 @@
         directives:
           - |
             server {
-              listen   25;
+              listen   1025;
               protocol smtp;
             }
             server {
-              listen   110;
+              listen   1110;
               protocol pop3;
               proxy_pass_error_message on;
             }
             server {
-              listen   143;
+              listen   1143;
               protocol imap;
             }
             server {
-              listen   587;
+              listen   1587;
               protocol smtp;
             }
 
