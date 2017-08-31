@@ -21,6 +21,7 @@ Set up (the latest version of) [NGINX](http://nginx.org/) in Debian-like systems
 * `nginx_stream_directives`: [optional]: 
 * `nginx_mail_directives`: [optional]: 
 
+* `nginx_present_paths`: [default: `[]`]: 
 * `nginx_absent_paths`: [default: `[]`]: 
 
 * `nginx_conf_d_include_files`: [default: `[]`]: 
