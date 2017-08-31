@@ -4,19 +4,10 @@
   file:
     path: "{{ item.path }}"
     state: directory
-    owner: "{{ item.owner | default('root') }}"
-    group: "{{ item.group | default('root') }}"
-    mode: "{{ item.mode | default('0755') }}"
-  with_items:
-    - "{{ nginx_conf_d }}"
-    - "{{ nginx_snippets }}"
-    - "{{ nginx_sites_available }}"
-    - "{{ nginx_sites_enabled }}"
-    - "{{ nginx_streams_available }}"
-    - "{{ nginx_streams_enabled }}"
-    - "{{ nginx_mails_available }}"
-    - "{{ nginx_mails_enabled }}"
-    - "{{ nginx_var_log }}"
+    owner: "{{ item.owner | default(nginx_default_owner) }}"
+    group: "{{ item.group | default(nginx_default_group) }}"
+    mode: "{{ item.mode | default(nginx_default_directory_mode) }}"
+  with_items: "{{ nginx_required_paths + nginx_present_paths }}"
   tags:
     - nginx-configure-directories
     - nginx-configure-directories-create
@@ -35,9 +26,9 @@
   template:
     src: "{{ nginx_conf_d.template.file.lstrip('/') }}.j2"
     dest: "{{ nginx_conf_d.path }}/{{ item.name }}"
-    owner: root
-    group: root
-    mode: 0644
+    owner: "{{ nginx_default_owner }}"
+    group: "{{ nginx_default_group }}"
+    mode: "{{ nginx_default_file_mode }}"
 #    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_conf_d_include_files }}"
@@ -48,9 +39,9 @@
   template:
     src: "{{ nginx_snippets.template.file.lstrip('/') }}.j2"
     dest: "{{ nginx_snippets.path }}/{{ item.name }}"
-    owner: root
-    group: root
-    mode: 0644
+    owner: "{{ nginx_default_owner }}"
+    group: "{{ nginx_default_group }}"
+    mode: "{{ nginx_default_file_mode }}"
 #    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_snippets_include_files }}"
@@ -61,9 +52,9 @@
   template:
     src: "{{ nginx_sites_available.template.file.lstrip('/') }}.j2"
     dest: "{{ nginx_sites_available.path }}/{{ item.name }}"
-    owner: root
-    group: root
-    mode: 0644
+    owner: "{{ nginx_default_owner }}"
+    group: "{{ nginx_default_group }}"
+    mode: "{{ nginx_default_file_mode }}"
 #    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_sites_available_include_files }}"
@@ -74,9 +65,9 @@
   template:
     src: "{{ nginx_streams_available.template.file.lstrip('/') }}.j2"
     dest: "{{ nginx_streams_available.path }}/{{ item.name }}"
-    owner: root
-    group: root
-    mode: 0644
+    owner: "{{ nginx_default_owner }}"
+    group: "{{ nginx_default_group }}"
+    mode: "{{ nginx_default_file_mode }}"
 #    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_streams_available_include_files }}"
@@ -87,9 +78,9 @@
   template:
     src: "{{ nginx_mails_available.template.file.lstrip('/') }}.j2"
     dest: "{{ nginx_mails_available.path }}/{{ item.name }}"
-    owner: root
-    group: root
-    mode: 0644
+    owner: "{{ nginx_default_owner }}"
+    group: "{{ nginx_default_group }}"
+    mode: "{{ nginx_default_file_mode }}"
 #    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_mails_available_include_files }}"
@@ -100,9 +91,9 @@
   template:
     src: "{{ nginx_conf_file.lstrip('/') }}.j2"
     dest: "{{ nginx_conf_file }}"
-    owner: root
-    group: root
-    mode: 0644
+    owner: "{{ nginx_default_owner }}"
+    group: "{{ nginx_default_group }}"
+    mode: "{{ nginx_default_file_mode }}"
     validate: 'nginx -t -c %s'
   notify: restart nginx
   tags:
@@ -116,7 +107,7 @@
   when: item.state | default('enabled') != 'enabled'
   notify: reload nginx
   tags:
-    - nginx-configure-streams-available-enabled
+    - nginx-configure-streams-available-disabled
 
 - name: configure | remove sites-enabled symlinks
   file:
@@ -126,7 +117,17 @@
   when: item.state | default('enabled') != 'enabled'
   notify: reload nginx
   tags:
-    - nginx-configure-sites-available-enabled
+    - nginx-configure-sites-available-disabled
+
+- name: configure | remove mails-enabled symlinks
+  file:
+    path: "{{ nginx_mails_enabled.path }}/{{ item.name }}"
+    state: absent
+  with_items: "{{ nginx_mails_available_include_files }}"
+  when: item.state | default('enabled') != 'enabled'
+  notify: reload nginx
+  tags:
+    - nginx-configure-mails-available-disabled
 
 - name: configure | add sites-enable symlinks
   command: ln -s ../{{ nginx_sites_available.path | basename }}/{{ item.name }} ./{{ item.name }}
@@ -137,7 +138,7 @@
   when: item.state | default('enabled') == 'enabled'
   notify: reload nginx
   tags:
-    - nginx-configure-sites-available-disabled
+    - nginx-configure-sites-available-enabled
 
 - name: configure | add streams-enable symlinks
   command: ln -s ../{{ nginx_streams_available.path | basename }}/{{ item.name }} ./{{ item.name }}
@@ -148,17 +149,7 @@
   when: item.state | default('enabled') == 'enabled'
   notify: reload nginx
   tags:
-    - nginx-configure-streams-available-disabled
-
-- name: configure | remove mails-enabled symlinks
-  file:
-    path: "{{ nginx_mails_enabled.path }}/{{ item.name }}"
-    state: absent
-  with_items: "{{ nginx_mails_available_include_files }}"
-  when: item.state | default('enabled') != 'enabled'
-  notify: reload nginx
-  tags:
-    - nginx-configure-mails-available-enabled
+    - nginx-configure-streams-available-enabled
 
 - name: configure | add mails-enable symlinks
   command: ln -s ../{{ nginx_mails_available.path | basename }}/{{ item.name }} ./{{ item.name }}
@@ -169,4 +160,4 @@
   when: item.state | default('enabled') == 'enabled'
   notify: reload nginx
   tags:
-    - nginx-configure-mails-available-disabled
+    - nginx-configure-mails-available-enabled

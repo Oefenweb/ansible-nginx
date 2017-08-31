@@ -44,3 +44,20 @@ nginx_mails_enabled:
 
 nginx_var_log:
   path: /var/log/nginx
+
+nginx_required_paths:
+  - "{{ nginx_conf_d }}"
+  - "{{ nginx_snippets }}"
+  - "{{ nginx_sites_available }}"
+  - "{{ nginx_sites_enabled }}"
+  - "{{ nginx_streams_available }}"
+  - "{{ nginx_streams_enabled }}"
+  - "{{ nginx_mails_available }}"
+  - "{{ nginx_mails_enabled }}"
+  - "{{ nginx_var_log }}"
+
+nginx_default_umask: '0022'
+nginx_default_owner: root
+nginx_default_group: root
+nginx_default_directory_mode: "{{ '%04d' | format(0777 - nginx_default_umask | int) }}"
+nginx_default_file_mode: "{{ '%04d' | format(0666 - nginx_default_umask | int) }}"

@@ -121,8 +121,11 @@ nginx_events_directives:
 
 nginx_http_directives: []
 
+# paths
+nginx_present_paths: []
 nginx_absent_paths: []
 
+# include files
 nginx_conf_d_include_files: []
 nginx_snippets_include_files: []
 nginx_sites_available_include_files: []
