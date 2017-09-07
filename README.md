@@ -21,8 +21,8 @@ Set up (the latest version of) [NGINX](http://nginx.org/) in Debian-like systems
 * `nginx_stream_directives`: [optional]: 
 * `nginx_mail_directives`: [optional]: 
 
-* `nginx_present_paths`: [default: `[]`]: 
-* `nginx_absent_paths`: [default: `[]`]: 
+* `nginx_present_paths`: [default: `[]`]: Directories to be created
+* `nginx_absent_paths`: [default: `[]`]: Paths to be removed
 
 * `nginx_conf_d_include_files`: [default: `[]`]: 
 * `nginx_snippets_include_files`: [default: `[]`]: 
