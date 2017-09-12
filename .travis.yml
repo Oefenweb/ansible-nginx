@@ -38,6 +38,9 @@ before_install:
   - sudo apt-get remove --purge --yes nginx*
 
 install:
+  # See https://github.com/ansible/ansible/issues/20063
+  - pip install 'jinja2<2.9';
+
   # Install Ansible.
   - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install ansible; else pip install ansible==$ANSIBLE_VERSION; fi
   - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install ansible-lint; fi
