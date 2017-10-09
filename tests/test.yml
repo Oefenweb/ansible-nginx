@@ -1,0 +1,30 @@
+# test file for nginx
+---
+- hosts: localhost
+  connection: local
+  become: true
+  roles:
+    - ../../
+  post_tasks:
+    - include: post.yml
+  vars:
+    nginx_http_directives:
+      - |
+        include {{ nginx_conf_path }}/mime.types;
+        default_type application/octet-stream;
+
+        include {{ nginx_conf_d.path }}/*.conf;
+        include {{ nginx_sites_enabled.path }}/*.conf;
+
+    nginx_sites_available_include_files:
+      - name: default-80.conf
+        directives:
+          - |
+            server {
+              listen 80;
+              server_name _ default-80 "";
+              location / {
+                root   /usr/share/nginx/html;
+                index  index.html index.htm;
+              }
+            }

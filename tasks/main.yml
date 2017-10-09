@@ -1,0 +1,44 @@
+# tasks file for nginx
+---
+- name: check version support
+  fail:
+    msg: "NGINX version {{ nginx_version }} is not supported"
+  when: nginx_version not in nginx_versions_supported
+  tags:
+    - configuration
+    - nginx
+    - nginx-check-version-support
+
+- include: repository.yml
+  tags:
+    - configuration
+    - nginx
+    - nginx-repository
+
+- include: install.yml
+  tags:
+    - configuration
+    - nginx
+    - nginx-install
+
+- include: certificates.yml
+  tags:
+    - configuration
+    - nginx
+    - nginx-certificates
+
+- include: configure.yml
+  tags:
+    - configuration
+    - nginx
+    - nginx-configure
+
+- name: start and enable service
+  service:
+    name: nginx
+    state: started
+    enabled: true
+  tags:
+    - configuration
+    - nginx
+    - nginx-start-enable-service

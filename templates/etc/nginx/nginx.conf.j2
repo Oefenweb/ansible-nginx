@@ -1,0 +1,33 @@
+# {{ ansible_managed }}
+
+{% for directive in nginx_core_directives %}
+{% include '_directive.j2' %}
+{% endfor %}
+
+events {
+{% for directive in nginx_events_directives %}
+{% include '__directive.j2' %}
+{% endfor %}
+}
+
+http {
+{% for directive in nginx_http_directives %}
+{% include '__directive.j2' %}
+{% endfor %}
+}
+
+{% if nginx_stream_directives is defined %}
+stream {
+{% for directive in nginx_stream_directives %}
+{% include '__directive.j2' %}
+{% endfor %}
+}
+{% endif %}
+
+{% if nginx_mail_directives is defined %}
+mail {
+{% for directive in nginx_mail_directives %}
+{% include '__directive.j2' %}
+{% endfor %}
+}
+{% endif %}
