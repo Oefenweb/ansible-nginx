@@ -7,6 +7,7 @@ Set up (the latest version of) [NGINX](http://nginx.org/) in Debian-like systems
 #### Requirements
 
 * `python-apt`
+* A recent version of `ansible` (`>= 2.3.0.0`) or an older version of `jinja2` (`<2.9`)
 
 #### Variables
 
