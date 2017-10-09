@@ -25,6 +25,7 @@ nginx_preset_conf_d_ssl:
         # Dropping SSLv3, ref: POODLE
         ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
         ssl_prefer_server_ciphers on;
+
 nginx_preset_conf_d_gzip:
   - name: gzip.conf
     directives:
@@ -68,6 +69,7 @@ nginx_preset_conf_d_fastcgi_param:
 
         # PHP only, required if PHP was built with --enable-force-cgi-redirect
         fastcgi_param  REDIRECT_STATUS    200;
+
 nginx_preset_conf_d_scgi_param:
   - name: scgi_param
     directives:
