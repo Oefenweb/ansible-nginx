@@ -4,8 +4,10 @@
   service:
     name: nginx
     state: restarted
+  when: service_default_state | default('started') == 'started'
 
 - name: reload nginx
   service:
     name: nginx
     state: reloaded
+  when: service_default_state | default('started') == 'started'
