@@ -1,6 +1,7 @@
 # meta file for nginx
 ---
 galaxy_info:
+  role_name: nginx
   author: Mischa ter Smitten
   company: Oefenweb.nl B.V.
   description: Set up (the latest version of) NGINX in Debian-like systems
