@@ -5,7 +5,7 @@
     id: ABF5BD827BD9BF62
     url: http://nginx.org/keys/nginx_signing.key
     state: present
-  when: "{{ nginx_use_ppa }}"
+  when: nginx_use_ppa
   tags:
     - nginx-repository-public-key
 
@@ -15,6 +15,6 @@
     state: present
     update_cache: true
   with_items: "{{ nginx_repositories }}"
-  when: "{{ nginx_use_ppa }}"
+  when: nginx_use_ppa
   tags:
     - nginx-repository-add
