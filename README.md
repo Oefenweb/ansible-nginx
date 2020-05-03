@@ -11,6 +11,8 @@ Set up (the latest version of) [NGINX](http://nginx.org/) in Debian-like systems
 
 #### Variables
 
+* `nginx_use_ppa`: [default: `true`]: Whether or not to add the PPA (for installation)
+
 * `nginx_version`: [default: `stable`]: Version to install (e.g. `development`)
 
 * `nginx_dependencies`: [default: `['nginx']`]: Packages to install

@@ -1,5 +1,6 @@
 # defaults file for nginx
 ---
+nginx_use_ppa: true
 nginx_version: stable
 
 nginx_dependencies:
