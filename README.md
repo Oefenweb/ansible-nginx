@@ -29,21 +29,23 @@ Set up (the latest version of) [NGINX](http://nginx.org/) in Debian-like systems
 
 * `nginx_conf_d_include_files`: [default: `[]`]: `conf.d` file declarations (in `/etc/nginx/conf.d`)
 * `nginx_conf_d_include_files.{n}.name`: [required]: The name of the file (e.g. `ssl.conf`)
+* `nginx_conf_d_include_files.{n}.state`: [default `present`]: The state of the file. Setting this to `absent` will remove the file
 
 * `nginx_snippets_include_files`: [default: `[]`]: `snippets` file declarations (in `/etc/nginx/snippets`)
 * `nginx_snippets_include_files.{n}.name`: [required]: The name of the file (e.g. `fastcgi_param`)
+* `nginx_snippets_include_files.{n}.state`: [default `present`]: The state of the file. Setting this to `absent` will remove the file
 
 * `nginx_sites_available_include_files`: [default: `[]`]: `sites_available` file declarations (in `/etc/nginx/sites_available`)
 * `nginx_sites_available_include_files.{n}.name`: [required]: The name of the file (e.g. `default-80.conf`)
-* `nginx_sites_available_include_files.{n}.state`: [default `enabled`]: The state of the file. Settings this to `enabled` will create a symlink in `sites_enabled`
+* `nginx_sites_available_include_files.{n}.state`: [default `enabled`]: The state of the file. Setting this to `enabled` will create a symlink in `sites_enabled`, setting this to `absent` will remove the file
 
 * `nginx_streams_available_include_files`: [default: `[]`]: `streams_available` file declarations (in `/etc/nginx/streams_available`)
 * `nginx_streams_available_include_files.{n}.name`: [required]: The name of the file (e.g. `dns.conf`)
-* `nginx_streams_available_include_files.{n}.state`: [default `enabled`]: The state of the file. Settings this to `enabled` will create a symlink in `streams_enabled`
+* `nginx_streams_available_include_files.{n}.state`: [default `enabled`]: The state of the file. Setting this to `enabled` will create a symlink in `streams_enabled`, setting this to `absent` will remove the file
 
 * `nginx_mails_available_include_files`: [default: `[]`]: `mails_available` file declarations (in `/etc/nginx/mails_available`)
 * `nginx_mails_available_include_files.{n}.name`: [required]: The name of the file (e.g. `mail.conf`)
-* `nginx_mails_available_include_files.{n}.state`: [default `enabled`]: The state of the file. Settings this to `enabled` will create a symlink in `mails_enabled`
+* `nginx_mails_available_include_files.{n}.state`: [default `enabled`]: The state of the file. Setting this to `enabled` will create a symlink in `mails_enabled`, setting this to `absent` will remove the file
 
 * `nginx_ssl_map`: [default: `[]`]: SSL declarations
 * `nginx_ssl_map.{n}.src`: The local path of the file to copy, can be absolute or relative (e.g. `../../../files/nginx/etc/nginx/ssl/star-example-com.pem`)

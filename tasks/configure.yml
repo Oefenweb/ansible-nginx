@@ -32,8 +32,20 @@
 #    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_conf_d_include_files }}"
+  when: item.state | default('present') != 'absent'
   tags:
     - nginx-configure-conf_d
+    - nginx-configure-conf_d-update
+
+- name: configure | remove conf.d files
+  file:
+    dest: "{{ nginx_conf_d.path }}/{{ item.name }}"
+    state: absent
+  with_items: "{{ nginx_conf_d_include_files }}"
+  when: item.state | default('present') == 'absent'
+  tags:
+    - nginx-configure-conf_d
+    - nginx-configure-conf_d-remove
 
 - name: configure | update snippets files
   template:
@@ -45,8 +57,20 @@
 #    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_snippets_include_files }}"
+  when: item.state | default('present') != 'absent'
   tags:
     - nginx-configure-snippets
+    - nginx-configure-snippets-update
+
+- name: configure | remove snippets files
+  file:
+    dest: "{{ nginx_snippets.path }}/{{ item.name }}"
+    state: absent
+  with_items: "{{ nginx_snippets_include_files }}"
+  when: item.state | default('present') == 'absent'
+  tags:
+    - nginx-configure-snippets
+    - nginx-configure-snippets-remove
 
 - name: configure | update sites-available files
   template:
@@ -58,8 +82,19 @@
 #    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_sites_available_include_files }}"
+  when: item.state | default('enabled') != 'absent'
   tags:
     - nginx-configure-sites-available
+    - nginx-configure-sites-available-update
+
+- name: configure | remove sites-available files
+  file:
+    dest: "{{ nginx_sites_available.path }}/{{ item.name }}"
+  with_items: "{{ nginx_sites_available_include_files }}"
+  when: item.state | default('enabled') == 'absent'
+  tags:
+    - nginx-configure-sites-available
+    - nginx-configure-sites-available-remove
 
 - name: configure | update streams-available files
   template:
@@ -71,8 +106,19 @@
 #    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_streams_available_include_files }}"
+  when: item.state | default('enabled') != 'absent'
   tags:
     - nginx-configure-streams-available
+    - nginx-configure-streams-available-update
+
+- name: configure | remove streams-available files
+  file:
+    dest: "{{ nginx_streams_available.path }}/{{ item.name }}"
+  with_items: "{{ nginx_streams_available_include_files }}"
+  when: item.state | default('enabled') == 'absent'
+  tags:
+    - nginx-configure-streams-available
+    - nginx-configure-streams-available-remove
 
 - name: configure | update mails-available files
   template:
@@ -84,8 +130,10 @@
 #    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_mails_available_include_files }}"
+  when: item.state | default('present') != 'absent'
   tags:
     - nginx-configure-mails-available
+    - nginx-configure-mails-available-update
 
 - name: configure | update core file
   template:
