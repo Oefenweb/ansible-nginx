@@ -90,6 +90,7 @@
 - name: configure | remove sites-available files
   file:
     dest: "{{ nginx_sites_available.path }}/{{ item.name }}"
+    state: absent
   with_items: "{{ nginx_sites_available_include_files }}"
   when: item.state | default('enabled') == 'absent'
   tags:
@@ -114,6 +115,7 @@
 - name: configure | remove streams-available files
   file:
     dest: "{{ nginx_streams_available.path }}/{{ item.name }}"
+    state: absent
   with_items: "{{ nginx_streams_available_include_files }}"
   when: item.state | default('enabled') == 'absent'
   tags:
@@ -134,6 +136,16 @@
   tags:
     - nginx-configure-mails-available
     - nginx-configure-mails-available-update
+
+- name: configure | remove mails-available files
+  file:
+    dest: "{{ nginx_mails_available.path }}/{{ item.name }}"
+    state: absent
+  with_items: "{{ nginx_mails_available_include_files }}"
+  when: item.state | default('present') == 'absent'
+  tags:
+    - nginx-configure-mails-available
+    - nginx-configure-mails-available-remove
 
 - name: configure | update core file
   template:
