@@ -15,6 +15,6 @@
     state: present
     update_cache: true
   with_items: "{{ nginx_repositories }}"
-  when: nginx_use_ppa
+  when: nginx_use_ppa | bool
   tags:
     - nginx-repository-add

@@ -1,6 +1,7 @@
 ## nginx
 
-[![Build Status](https://travis-ci.org/Oefenweb/ansible-nginx.svg?branch=master)](https://travis-ci.org/Oefenweb/ansible-nginx) [![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-nginx-blue.svg)](https://galaxy.ansible.com/Oefenweb/nginx)
+[![Build Status](https://travis-ci.org/Oefenweb/ansible-nginx.svg?branch=master)](https://travis-ci.org/Oefenweb/ansible-nginx)
+[![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-nginx-blue.svg)](https://galaxy.ansible.com/Oefenweb/nginx)
 
 Set up (the latest version of) [NGINX](http://nginx.org/) in Debian-like systems.
 

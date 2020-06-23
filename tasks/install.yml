@@ -2,16 +2,14 @@
 ---
 - name: install | dependencies
   apt:
-    name: "{{ item }}"
+    name: "{{ nginx_dependencies }}"
     state: "{{ apt_install_state | default('latest') }}"
-  with_items: "{{ nginx_dependencies }}"
   tags:
     - nginx-install-dependencies
 
 - name: install | additional
   apt:
-    name: "{{ item }}"
+    name: "{{ nginx_install }}"
     state: "{{ apt_install_state | default('latest') }}"
-  with_items: "{{ nginx_install }}"
   tags:
     - nginx-install-additional
