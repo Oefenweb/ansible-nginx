@@ -87,7 +87,7 @@ None
                 index  index.html index.htm;
               }
             }
-``
+```
 
 ##### Advanced, multiple vhosts, stream and mail
 
@@ -240,7 +240,7 @@ None
       - "{{ nginx_conf_path }}/uwsgi_params"
 
       - "{{ nginx_conf_d.path }}/default.conf"
-``
+```
 
 #### License
 
