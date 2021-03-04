@@ -12,6 +12,10 @@ nginx_repositories:
     url: "http://nginx.org/packages/{{ '' if nginx_version == 'stable' else 'mainline/' }}{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }}"
     component: nginx
 
+nginx_dependencies_pre:
+  - software-properties-common
+  - dirmngr
+
 nginx_conf_path: /etc/nginx
 nginx_conf_file: "{{ nginx_conf_path }}/nginx.conf"
 
