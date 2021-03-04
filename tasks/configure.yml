@@ -29,7 +29,6 @@
     owner: "{{ nginx_default_owner }}"
     group: "{{ nginx_default_group }}"
     mode: "{{ nginx_default_file_mode }}"
-#    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_conf_d_include_files }}"
   tags:
@@ -42,7 +41,6 @@
     owner: "{{ nginx_default_owner }}"
     group: "{{ nginx_default_group }}"
     mode: "{{ nginx_default_file_mode }}"
-#    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_snippets_include_files }}"
   tags:
@@ -55,7 +53,6 @@
     owner: "{{ nginx_default_owner }}"
     group: "{{ nginx_default_group }}"
     mode: "{{ nginx_default_file_mode }}"
-#    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_sites_available_include_files }}"
   tags:
@@ -68,7 +65,6 @@
     owner: "{{ nginx_default_owner }}"
     group: "{{ nginx_default_group }}"
     mode: "{{ nginx_default_file_mode }}"
-#    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_streams_available_include_files }}"
   tags:
@@ -81,7 +77,6 @@
     owner: "{{ nginx_default_owner }}"
     group: "{{ nginx_default_group }}"
     mode: "{{ nginx_default_file_mode }}"
-#    validate: 'nginx -t -c %s'
   notify: reload nginx
   with_items: "{{ nginx_mails_available_include_files }}"
   tags:

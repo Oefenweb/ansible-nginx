@@ -1,14 +1,14 @@
 ## nginx
 
-[![Build Status](https://travis-ci.org/Oefenweb/ansible-nginx.svg?branch=master)](https://travis-ci.org/Oefenweb/ansible-nginx)
+[![CI](https://github.com/Oefenweb/ansible-nginx/workflows/CI/badge.svg)](https://github.com/Oefenweb/ansible-nginx/actions?query=workflow%3ACI)
 [![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-nginx-blue.svg)](https://galaxy.ansible.com/Oefenweb/nginx)
 
 Set up (the latest version of) [NGINX](http://nginx.org/) in Debian-like systems.
 
 #### Requirements
 
-* `python-apt`
-* A recent version of `ansible` (`>= 2.3.0.0`) or an older version of `jinja2` (`<2.9`)
+* `software-properties-common` (will be installed)
+* `dirmngr` (will be installed)
 
 #### Variables
 

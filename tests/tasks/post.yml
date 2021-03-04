@@ -1,6 +1,6 @@
 # post test file for nginx
 ---
-- name: post | install dependencies
+- name: install dependencies
   apt:
     name:
       - curl
@@ -8,7 +8,7 @@
     update_cache: true
     cache_valid_time: "{{ apt_update_cache_valid_time | default(3600) }}"
 
-- name: post | test installation
+- name: test installation
   command: >
     curl -s --head http://localhost
   args:
@@ -16,3 +16,5 @@
   register: _result
   changed_when: false
   failed_when: _result.stdout.find('200 OK') == -1
+  tags:
+    - skip_ansible_lint
