@@ -1,4 +1,4 @@
-# tasks file for nginx
+# tasks file
 ---
 - name: repository | install | dependencies (pre)
   apt:

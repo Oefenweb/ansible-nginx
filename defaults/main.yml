@@ -1,4 +1,4 @@
-# defaults file for nginx
+# defaults file
 ---
 nginx_use_ppa: true
 nginx_version: stable

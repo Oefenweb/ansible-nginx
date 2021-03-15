@@ -1,4 +1,4 @@
-# tasks file for nginx
+# tasks file
 ---
 - name: certificates | create files directories
   file:

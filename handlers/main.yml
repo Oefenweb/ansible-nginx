@@ -1,4 +1,4 @@
-# handlers file for nginx
+# handlers file
 ---
 - name: restart nginx
   service:

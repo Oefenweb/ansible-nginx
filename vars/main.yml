@@ -1,4 +1,4 @@
-# vars file for nginx
+# vars file
 ---
 nginx_versions_supported:
   - stable
