@@ -5,10 +5,10 @@ nginx_versions_supported:
   - mainline
 
 nginx_repositories:
-  - type: deb
+  - type: 'deb [arch=amd64]'
     url: "http://nginx.org/packages/{{ '' if nginx_version == 'stable' else 'mainline/' }}{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }}"
     component: nginx
-  - type: deb-src
+  - type: 'deb-src [arch=amd64]'
     url: "http://nginx.org/packages/{{ '' if nginx_version == 'stable' else 'mainline/' }}{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }}"
     component: nginx
 
