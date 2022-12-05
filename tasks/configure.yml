@@ -124,39 +124,36 @@
   tags:
     - nginx-configure-mails-available-disabled
 
-- name: configure | add sites-enable symlinks
+- name: configure | add sites-enable symlinks  # noqa command-instead-of-module
   command: >
     ln -s ../{{ nginx_sites_available.path | basename }}/{{ item.name }} ./{{ item.name }}
   args:
     chdir: "{{ nginx_sites_enabled.path }}"
     creates: "{{ nginx_sites_enabled.path }}/{{ item.name }}"
-    warn: false
   with_items: "{{ nginx_sites_available_include_files }}"
   when: item.state | default('enabled') == 'enabled'
   notify: reload nginx
   tags:
     - nginx-configure-sites-available-enabled
 
-- name: configure | add streams-enable symlinks
+- name: configure | add streams-enable symlinks  # noqa command-instead-of-module
   command: >
     ln -s ../{{ nginx_streams_available.path | basename }}/{{ item.name }} ./{{ item.name }}
   args:
     chdir: "{{ nginx_streams_enabled.path }}"
     creates: "{{ nginx_streams_enabled.path }}/{{ item.name }}"
-    warn: false
   with_items: "{{ nginx_streams_available_include_files }}"
   when: item.state | default('enabled') == 'enabled'
   notify: reload nginx
   tags:
     - nginx-configure-streams-available-enabled
 
-- name: configure | add mails-enable symlinks
+- name: configure | add mails-enable symlinks  # noqa command-instead-of-module
   command: >
     ln -s ../{{ nginx_mails_available.path | basename }}/{{ item.name }} ./{{ item.name }}
   args:
     chdir: "{{ nginx_mails_enabled.path }}"
     creates: "{{ nginx_mails_enabled.path }}/{{ item.name }}"
-    warn: false
   with_items: "{{ nginx_mails_available_include_files }}"
   when: item.state | default('enabled') == 'enabled'
   notify: reload nginx
