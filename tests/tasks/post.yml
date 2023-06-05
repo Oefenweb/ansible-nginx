@@ -1,6 +1,6 @@
 # post test file
 ---
-- name: install dependencies
+- name: install dependencies  # noqa package-latest
   ansible.builtin.apt:
     name:
       - curl
