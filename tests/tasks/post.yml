@@ -1,7 +1,7 @@
 # post test file
 ---
 - name: install dependencies
-  apt:
+  ansible.builtin.apt:
     name:
       - curl
     state: latest
@@ -9,7 +9,7 @@
     cache_valid_time: "{{ apt_update_cache_valid_time | default(3600) }}"
 
 - name: test installation  # noqa command-instead-of-module
-  command: >
+  ansible.builtin.command: >
     curl -s --head http://localhost
   register: _result
   changed_when: false

@@ -20,28 +20,28 @@ nginx_conf_path: /etc/nginx
 nginx_conf_file: "{{ nginx_conf_path }}/nginx.conf"
 
 nginx_conf_d:
-  template:
-    file: "{{ nginx_conf_path }}/conf.d.conf"
+  ansible.builtin.template:
+    ansible.builtin.file: "{{ nginx_conf_path }}/conf.d.conf"
   path: "{{ nginx_conf_path }}/conf.d"
 nginx_snippets:
-  template:
-    file: "{{ nginx_conf_path }}/snippets"
+  ansible.builtin.template:
+    ansible.builtin.file: "{{ nginx_conf_path }}/snippets"
   path: "{{ nginx_conf_path }}/snippets"
 nginx_sites_available:
-  template:
-    file: "{{ nginx_conf_path }}/sites-available.conf"
+  ansible.builtin.template:
+    ansible.builtin.file: "{{ nginx_conf_path }}/sites-available.conf"
   path: "{{ nginx_conf_path }}/sites-available"
 nginx_sites_enabled:
   path: "{{ nginx_conf_path }}/sites-enabled"
 nginx_streams_available:
-  template:
-    file: "{{ nginx_conf_path }}/streams-available.conf"
+  ansible.builtin.template:
+    ansible.builtin.file: "{{ nginx_conf_path }}/streams-available.conf"
   path: "{{ nginx_conf_path }}/streams-available"
 nginx_streams_enabled:
   path: "{{ nginx_conf_path }}/streams-enabled"
 nginx_mails_available:
-  template:
-    file: "{{ nginx_conf_path }}/mails-available.conf"
+  ansible.builtin.template:
+    ansible.builtin.file: "{{ nginx_conf_path }}/mails-available.conf"
   path: "{{ nginx_conf_path }}/mails-available"
 nginx_mails_enabled:
   path: "{{ nginx_conf_path }}/mails-enabled"

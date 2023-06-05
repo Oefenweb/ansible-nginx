@@ -1,7 +1,7 @@
 # tasks file
 ---
 - name: certificates | create files directories
-  file:
+  ansible.builtin.file:
     path: "{{ item.dest | dirname }}"
     state: directory
     owner: "{{ item.owner | default(nginx_default_owner) }}"
@@ -12,7 +12,7 @@
     - nginx-certificates-directories
 
 - name: certificates | copy files
-  copy:
+  ansible.builtin.copy:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: "{{ item.owner | default(nginx_default_owner) }}"
