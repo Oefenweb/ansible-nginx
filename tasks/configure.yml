@@ -1,7 +1,7 @@
 # tasks file
 ---
 - name: configure | create directories
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
     owner: "{{ item.owner | default(nginx_default_owner) }}"
@@ -13,7 +13,7 @@
     - nginx-configure-directories-create
 
 - name: configure | remove paths
-  file:
+  ansible.builtin.file:
     path: "{{ item }}"
     state: absent
   with_items: "{{ nginx_absent_paths }}"
@@ -23,7 +23,7 @@
     - nginx-configure-paths-remove
 
 - name: configure | update conf.d files
-  template:
+  ansible.builtin.template:
     src: "{{ nginx_conf_d.template.file.lstrip('/') }}.j2"
     dest: "{{ nginx_conf_d.path }}/{{ item.name }}"
     owner: "{{ nginx_default_owner }}"
@@ -35,7 +35,7 @@
     - nginx-configure-conf_d
 
 - name: configure | update snippets files
-  template:
+  ansible.builtin.template:
     src: "{{ nginx_snippets.template.file.lstrip('/') }}.j2"
     dest: "{{ nginx_snippets.path }}/{{ item.name }}"
     owner: "{{ nginx_default_owner }}"
@@ -47,7 +47,7 @@
     - nginx-configure-snippets
 
 - name: configure | update sites-available files
-  template:
+  ansible.builtin.template:
     src: "{{ nginx_sites_available.template.file.lstrip('/') }}.j2"
     dest: "{{ nginx_sites_available.path }}/{{ item.name }}"
     owner: "{{ nginx_default_owner }}"
@@ -59,7 +59,7 @@
     - nginx-configure-sites-available
 
 - name: configure | update streams-available files
-  template:
+  ansible.builtin.template:
     src: "{{ nginx_streams_available.template.file.lstrip('/') }}.j2"
     dest: "{{ nginx_streams_available.path }}/{{ item.name }}"
     owner: "{{ nginx_default_owner }}"
@@ -71,7 +71,7 @@
     - nginx-configure-streams-available
 
 - name: configure | update mails-available files
-  template:
+  ansible.builtin.template:
     src: "{{ nginx_mails_available.template.file.lstrip('/') }}.j2"
     dest: "{{ nginx_mails_available.path }}/{{ item.name }}"
     owner: "{{ nginx_default_owner }}"
@@ -83,7 +83,7 @@
     - nginx-configure-mails-available
 
 - name: configure | update core file
-  template:
+  ansible.builtin.template:
     src: "{{ nginx_conf_file.lstrip('/') }}.j2"
     dest: "{{ nginx_conf_file }}"
     owner: "{{ nginx_default_owner }}"
@@ -95,7 +95,7 @@
     - nginx-configure-core
 
 - name: configure | remove streams-enabled symlinks
-  file:
+  ansible.builtin.file:
     path: "{{ nginx_streams_enabled.path }}/{{ item.name }}"
     state: absent
   with_items: "{{ nginx_streams_available_include_files }}"
@@ -105,7 +105,7 @@
     - nginx-configure-streams-available-disabled
 
 - name: configure | remove sites-enabled symlinks
-  file:
+  ansible.builtin.file:
     path: "{{ nginx_sites_enabled.path }}/{{ item.name }}"
     state: absent
   with_items: "{{ nginx_sites_available_include_files }}"
@@ -115,7 +115,7 @@
     - nginx-configure-sites-available-disabled
 
 - name: configure | remove mails-enabled symlinks
-  file:
+  ansible.builtin.file:
     path: "{{ nginx_mails_enabled.path }}/{{ item.name }}"
     state: absent
   with_items: "{{ nginx_mails_available_include_files }}"
@@ -125,7 +125,7 @@
     - nginx-configure-mails-available-disabled
 
 - name: configure | add sites-enable symlinks  # noqa command-instead-of-module
-  command: >
+  ansible.builtin.command: >
     ln -s ../{{ nginx_sites_available.path | basename }}/{{ item.name }} ./{{ item.name }}
   args:
     chdir: "{{ nginx_sites_enabled.path }}"
@@ -137,7 +137,7 @@
     - nginx-configure-sites-available-enabled
 
 - name: configure | add streams-enable symlinks  # noqa command-instead-of-module
-  command: >
+  ansible.builtin.command: >
     ln -s ../{{ nginx_streams_available.path | basename }}/{{ item.name }} ./{{ item.name }}
   args:
     chdir: "{{ nginx_streams_enabled.path }}"
@@ -149,7 +149,7 @@
     - nginx-configure-streams-available-enabled
 
 - name: configure | add mails-enable symlinks  # noqa command-instead-of-module
-  command: >
+  ansible.builtin.command: >
     ln -s ../{{ nginx_mails_available.path | basename }}/{{ item.name }} ./{{ item.name }}
   args:
     chdir: "{{ nginx_mails_enabled.path }}"
