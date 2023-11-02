@@ -65,7 +65,7 @@ None
 ---
 - hosts: all
   roles:
-    - nginx
+    - oefenweb.nginx
   vars:
     nginx_http_directives:
       - |
@@ -95,7 +95,7 @@ None
 ---
 - hosts: all
   roles:
-    - nginx
+    - oefenweb.nginx
   vars:
     nginx_http_directives:
       - |
