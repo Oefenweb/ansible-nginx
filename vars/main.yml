@@ -4,17 +4,29 @@ nginx_versions_supported:
   - stable
   - mainline
 
+nginx_keyring_src: https://nginx.org/keys/nginx_signing.key
+nginx_keyring_dst: /usr/share/keyrings/nginx.gpg
 nginx_repositories:
+  - type: 'deb [arch=amd64 signed-by={{ nginx_keyring_dst }}]'
+    url: "http://nginx.org/packages/{{ '' if nginx_version == 'stable' else 'mainline/' }}{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }}"
+    component: nginx
+  - type: 'deb-src [arch=amd64 signed-by={{ nginx_keyring_dst }}]'
+    url: "http://nginx.org/packages/{{ '' if nginx_version == 'stable' else 'mainline/' }}{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }}"
+    component: nginx
   - type: 'deb [arch=amd64]'
     url: "http://nginx.org/packages/{{ '' if nginx_version == 'stable' else 'mainline/' }}{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }}"
     component: nginx
+    state: absent
   - type: 'deb-src [arch=amd64]'
     url: "http://nginx.org/packages/{{ '' if nginx_version == 'stable' else 'mainline/' }}{{ ansible_distribution | lower }}/ {{ ansible_distribution_release }}"
     component: nginx
+    state: absent
 
 nginx_dependencies_pre:
   - software-properties-common
   - dirmngr
+  - apt-transport-https
+  - wget
 
 nginx_conf_path: /etc/nginx
 nginx_conf_file: "{{ nginx_conf_path }}/nginx.conf"

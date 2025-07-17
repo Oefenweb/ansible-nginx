@@ -6,7 +6,7 @@
     state: directory
     owner: "{{ item.owner | default(nginx_default_owner) }}"
     group: "{{ item.group | default(nginx_default_group) }}"
-    mode: 0750
+    mode: '0750'
   with_items: "{{ nginx_ssl_map }}"
   tags:
     - nginx-certificates-directories
