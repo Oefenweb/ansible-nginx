@@ -36,3 +36,13 @@
   with_items: "{{ nginx_repositories }}"
   tags:
     - nginx-repository-add
+
+- name: repository | apt-pin packages
+  ansible.builtin.copy:
+    src: etc/apt/preferences.d/00nginx.pref
+    dest: /etc/apt/preferences.d/00nginx.pref
+    owner: root
+    group: root
+    mode: '0644'
+  tags:
+    - nginx-repository-apt-pin
