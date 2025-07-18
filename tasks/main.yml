@@ -11,6 +11,7 @@
 
 - name: repository
   ansible.builtin.import_tasks: repository.yml
+  when: nginx_use_ppa | bool
   tags:
     - configuration
     - nginx
