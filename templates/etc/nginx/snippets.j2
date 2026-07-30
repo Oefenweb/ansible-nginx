@@ -1,4 +1,4 @@
-# {{ ansible_managed }}
+{{ ansible_managed | comment }}
 
 {% for directive in item.directives %}
 {% include '_directive.j2' %}
