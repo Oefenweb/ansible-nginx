@@ -206,7 +206,7 @@ None
             }
 
             server {
-              listen {{ ansible_lo['ipv4']['address'] }}:53 udp;
+              listen {{ ansible_facts['lo']['ipv4']['address'] }}:53 udp;
               proxy_responses 1;
               proxy_timeout 20s;
               proxy_pass dns;
